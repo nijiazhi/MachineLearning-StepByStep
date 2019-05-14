@@ -7,8 +7,11 @@ If u have some special problem about the prject, u can take the issues.
   - Gradient decent
 - Basic Machine Learning Algorithm
   - Tree Family
+  - Softmax
+  - Logistic Regression
 - Deep Learning Algorithm
-
 - Reinforce Learning Algorithm
   - Q learning
 - Transfer Learning Algorithm
+
+May you be stronger~
