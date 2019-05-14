@@ -5,13 +5,9 @@ If u have some special problem about the prject, u can take the issues.
 
 - Optimization Algorithm
   - Gradient decent
-  
 - Basic Machine Learning Algorithm
   - Tree Family
-
 - Deep Learning Algorithm
-
 - Reinforce Learning Algorithm
   - Q learning
-
 - Transfer Learning Algorithm
