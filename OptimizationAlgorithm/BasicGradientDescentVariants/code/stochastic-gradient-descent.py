@@ -2,14 +2,9 @@ import pandas as pd
 import numpy as np
 import time
 
-'''
-参考资料：
-1. http://sofasofa.io/tutorials/python_gradient_descent/2.php
-2. https://blog.csdn.net/u012328159/article/details/80252012
-'''
 
 
-def compute_grad(beta, x, y):
+def compute_grad_SGD(beta, x, y):
     """
     回归问题，最小二乘法求解，计算梯度
     y = beta_0 + beta_1*x
@@ -20,9 +15,11 @@ def compute_grad(beta, x, y):
     :return:
     """
     grad = [0, 0]
-    grad[0] = 2. * np.mean(beta[0] + beta[1] * x - y)
-    grad[1] = 2. * np.mean(x * (beta[0] + beta[1] * x - y))
+    r = np.random.randint(0, len(x))  # 随机选择一个样本，计算梯度
+    grad[0] = 2. * np.mean(beta[0] + beta[1] * x[r] - y[r])
+    grad[1] = 2. * np.mean(x[r] * (beta[0] + beta[1] * x[r] - y[r]))
     return np.array(grad)
+
 
 
 def update_beta(beta, alpha, grad):
@@ -60,12 +57,12 @@ def main():
     beta = [1, 1]  # 梯度下降初始点
     alpha = 0.1    # 学习率
     tol_L = 0.1    # 迭代终止的误差忍耐度（更切合实际的作法是设置对于损失函数的变动的阈值tol_L）
-    max_iters = 500  # 数据集最大遍历次数（类似深度学习中epoch数量）
+    max_iters = 500   # 数据集最大遍历次数（类似深度学习中epoch数量）
 
     # 读取数据
-    train = pd.read_csv('../data/train.csv')
-    test = pd.read_csv('../data/test.csv')
-    submit = pd.read_csv('../data/sample_submit.csv')
+    train = pd.read_csv('./data/train.csv')
+    test = pd.read_csv('./data/test.csv')
+    submit = pd.read_csv('./data/sample_submit.csv')
     print(train.shape, train.head(2))
 
     # 对x进行归一化
@@ -74,9 +71,9 @@ def main():
     y = train['questions']
 
     rmse_result_list = []
-
     # 进行第一次计算
-    grad = compute_grad(beta, x, y)
+    np.random.seed(10)
+    grad = compute_grad_SGD(beta, x, y)
     loss = rmse(beta, x, y)
     rmse_result_list.append(loss)
     beta = update_beta(beta, alpha, grad)
@@ -86,39 +83,31 @@ def main():
 
     # 开始迭代
     i = 1
+    sample_num = x.shape[0]
     while np.abs(loss_new - loss) > tol_L and i < max_iters:
-        rmse_result_list.append(loss_new)
-        grad = compute_grad(beta, x, y)
-        beta = update_beta(beta, alpha, grad)
-        loss = loss_new
-        loss_new = rmse(beta, x, y)
+        sgd_num = sample_num
+        for j in range(sgd_num):
+            # rmse_result_list.append(loss_new)
+            grad = compute_grad_SGD(beta, x, y)
+            beta = update_beta(beta, alpha, grad)
+            loss = loss_new
+            loss_new = rmse(beta, x, y)
         print('Round: %s, Diff RMSE: %s ' % (i, abs(loss_new - loss)), grad)
+        rmse_result_list.append(loss_new)
         i += 1
 
-    print('\n', '*'*40, '\n')
+    print()
     print('Coef: %s \nIntercept %s' % (beta[1], beta[0]))
     print('Our Coef: %s \nOur Intercept %s'%(beta[1] / max_x, beta[0]))
+
+    print()
     res = rmse(beta, x, y)
     print('Our RMSE: %s' % res)
 
-    ##########################
-    ## 与sklearn做比较
-    ##########################
-    print('\n', '*'*40, '\n')
-    from sklearn.linear_model import LinearRegression
-    lr = LinearRegression()
-    lr.fit(train[['id']], train[['questions']])
-    print('Sklearn Coef: %s' % lr.coef_[0][0])
-    print('Sklearn Coef: %s' % lr.intercept_[0])
-
-    res = rmse([936.051219649, 2.19487084], train['id'], y)
-    print('Sklearn RMSE: %s' % res)
-
     # output rmse result
-    rmse_result_path = './rmse_result/full-batch-rmse-result.csv'
+    rmse_result_path = './rmse_result/stochastic-rmse-result.csv'
     rmse_result_df = pd.DataFrame(rmse_result_list)
     rmse_result_df.to_csv(rmse_result_path)
-    print('\n', '*'*40, '\n')
     print('All done', len(rmse_result_list))
 
 
@@ -128,7 +117,7 @@ if __name__ == '__main__':
     main()
 
     t2 = time.time()
-    print('\n############ %s done: | %fmin ############' % ('full-batch', (t2 - t1) / 60))
+    print('\n############ %s done: | %fmin ############' % ('stochastic', (t2 - t1) / 60))
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t1)))
     print(time.strftime("%Y-%m-%d %H:%M:%S", time.localtime(t2)))
 

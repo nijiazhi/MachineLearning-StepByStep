@@ -74,6 +74,7 @@ target/
 
 # pycharm
 .idea
+data/
 
 # pyenv
 .python-version
@@ -105,4 +106,3 @@ venv.bak/
 
 # mypy
 .mypy_cache/
-

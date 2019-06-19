@@ -8,6 +8,8 @@ def plot_rmse(file_path):
     df1 = pd.read_csv(file_path, index_col=0)
     plt.title(file_path)
     plt.plot(df1.index, df1.loc[:, '0'], '-')
+    plt.xlabel('epoch')
+    plt.ylabel('rmse')
     return
 
 

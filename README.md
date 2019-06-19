@@ -1,10 +1,13 @@
 # MachineLearning-StepByStep
 
+
 This project contains some machine learning resource, such as interesting code and skills. I will update it from time to time.
 If u have some special problem about the prject, u can take the issues.
 
+
 - Optimization Algorithm
-  - Gradient decent
+  - Basic gradient decent variants(learn rate fixed)
+  - Adaptive learning rate algorithm
 - Basic Machine Learning Algorithm
   - Tree Family
   - Softmax
@@ -14,4 +17,5 @@ If u have some special problem about the prject, u can take the issues.
   - Q learning
 - Transfer Learning Algorithm
 
-May you be stronger~
+
+May you be stronger.
