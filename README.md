@@ -21,5 +21,6 @@ If you have some special problem about the prject, you can take the issues.
   
 - Transfer Learning Algorithm
 
+---
 
-**May you be stronger.**
+**All in all, May you be stronger.**
