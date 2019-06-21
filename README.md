@@ -1,6 +1,5 @@
 # MachineLearning-StepByStep
 
-
 This project contains some machine learning resource, such as interesting code and skills. I will update it from time to time.
 If you have some special problem about the prject, you can take the issues.
 
