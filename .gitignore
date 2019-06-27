@@ -74,6 +74,7 @@ target/
 
 # pycharm
 .idea
+log/
 
 # pyenv
 .python-version
