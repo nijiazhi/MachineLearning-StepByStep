@@ -1,7 +1,16 @@
 import math
 from copy import deepcopy
 
+'''
+andy：
+    - 关于w进行拉格朗日极大化 等价于 对数似然函数最大化
+    - 使用改进的迭代尺度法(IIS)的过程
 
+参考博客：
+    https://zhuanlan.zhihu.com/p/51638729
+    https://blog.csdn.net/wkebj/article/details/77965714
+    https://zhuanlan.zhihu.com/p/26551798
+'''
 class MaxEntropy:
 
     def __init__(self, EPS=0.005):
@@ -33,7 +42,7 @@ class MaxEntropy:
                     else:
                         self._numXY[(x, y)] = 1
 
-        self._N = len(self._samples)
+        self._N = len(self._samples)  # 样本数
         self._n = len(self._numXY)  # 特征键值(x,y)的个数
         self._C = max([len(sample)-1 for sample in self._samples])
         self._w = [0]*self._n
@@ -96,7 +105,7 @@ class MaxEntropy:
         for loop in range(maxiter):  # 最大训练次数
             print("iter:%d" % loop)
             self._lastw = self._w[:]
-            for i in range(self._n):
+            for i in range(self._n):  # 特征键值(x,y)的个数
                 ep = self._model_ep(i)    # 计算第i个特征的模型期望
                 self._w[i] += math.log(self._Ep_[i]/ep)/self._C   # 更新参数
             print("w:", self._w)
@@ -104,25 +113,27 @@ class MaxEntropy:
                 break
 
 
-dataset = [['no', 'sunny', 'hot', 'high', 'FALSE'],
-           ['no', 'sunny', 'hot', 'high', 'TRUE'],
-           ['yes', 'overcast', 'hot', 'high', 'FALSE'],
-           ['yes', 'rainy', 'mild', 'high', 'FALSE'],
-           ['yes', 'rainy', 'cool', 'normal', 'FALSE'],
-           ['no', 'rainy', 'cool', 'normal', 'TRUE'],
-           ['yes', 'overcast', 'cool', 'normal', 'TRUE'],
-           ['no', 'sunny', 'mild', 'high', 'FALSE'],
-           ['yes', 'sunny', 'cool', 'normal', 'FALSE'],
-           ['yes', 'rainy', 'mild', 'normal', 'FALSE'],
-           ['yes', 'sunny', 'mild', 'normal', 'TRUE'],
-           ['yes', 'overcast', 'mild', 'high', 'TRUE'],
-           ['yes', 'overcast', 'hot', 'normal', 'FALSE'],
-           ['no', 'rainy', 'mild', 'high', 'TRUE']]
+if __name__ == '__main__':
+
+    dataset = [['no', 'sunny', 'hot', 'high', 'FALSE'],
+               ['no', 'sunny', 'hot', 'high', 'TRUE'],
+               ['yes', 'overcast', 'hot', 'high', 'FALSE'],
+               ['yes', 'rainy', 'mild', 'high', 'FALSE'],
+               ['yes', 'rainy', 'cool', 'normal', 'FALSE'],
+               ['no', 'rainy', 'cool', 'normal', 'TRUE'],
+               ['yes', 'overcast', 'cool', 'normal', 'TRUE'],
+               ['no', 'sunny', 'mild', 'high', 'FALSE'],
+               ['yes', 'sunny', 'cool', 'normal', 'FALSE'],
+               ['yes', 'rainy', 'mild', 'normal', 'FALSE'],
+               ['yes', 'sunny', 'mild', 'normal', 'TRUE'],
+               ['yes', 'overcast', 'mild', 'high', 'TRUE'],
+               ['yes', 'overcast', 'hot', 'normal', 'FALSE'],
+               ['no', 'rainy', 'mild', 'high', 'TRUE']]
 
 
-maxent = MaxEntropy()
+    maxent = MaxEntropy()
 
-x = ['overcast', 'mild', 'high', 'FALSE']
-maxent.loadData(dataset)
-maxent.train()
-print('predict:', maxent.predict(x))
+    x = ['overcast', 'mild', 'high', 'FALSE']
+    maxent.loadData(dataset)
+    maxent.train()
+    print('predict:', maxent.predict(x))
